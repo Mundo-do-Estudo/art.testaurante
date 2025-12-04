@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const routesBtn = document.getElementById('routesBtn');
     const sendToPhoneBtn = document.getElementById('sendToPhoneBtn');
     const shareBtn = document.getElementById('shareBtn');
-    const rateOnGoogleBtn = document.getElementById('rateOnGoogleBtn');
     const phoneModal = document.getElementById('phoneModal');
     const modalOverlay = document.querySelector('.modal-overlay');
     const closeModalBtns = document.querySelectorAll('.close-modal');
@@ -159,38 +158,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     });
     
-    // Botão Enviar para Smartphone
-    sendToPhoneBtn.addEventListener('click', () => {
-        openModal(phoneModal);
-    });
-    
-    // Botão Compartilhar
-    shareBtn.addEventListener('click', async () => {
-        const shareData = {
-            title: 'art. restaurante',
-            text: 'Conheça o art. restaurante - Gastronomia como forma de arte!',
-            url: window.location.href
-        };
-        
-        try {
-            // Verifica se a Web Share API está disponível
-            if (navigator.share) {
-                await navigator.share(shareData);
-            } else {
-                // Fallback para copiar para a área de transferência
-                await navigator.clipboard.writeText(window.location.href);
-                showNotification('Link copiado para a área de transferência!', 'success');
-            }
-        } catch (err) {
-            console.log('Erro ao compartilhar:', err);
-        }
-    });
-    
-    // Botão Avaliar no Google
-    rateOnGoogleBtn.addEventListener('click', () => {
-        // Redireciona para uma página de avaliação do Google
-        window.open('https://www.google.com/maps/place/art.+restaurante/@-23.5217259,-46.1840155,1730m/data=!3m1!1e3!4m10!1m2!2m1!1sRestaurantes!3m6!1s0x94cdd9f3e110e4b3:0x97a62a8d916b7d7!8m2!3d-23.5217369!4d-46.1841459!15sCgxSZXN0YXVyYW50ZXNaDiIMcmVzdGF1cmFudGVzkgEKcmVzdGF1cmFudOABAA!16s%2Fg%2F11j_0xtd1j?entry=ttu&g_ep=EgoyMDI1MTIwMS4wIKXMDSoASAFQAw%3D%3D');
-    });
+    // Botão Enviar para Smartphone (se existir)
+    if (sendToPhoneBtn) {
+        sendToPhoneBtn.addEventListener('click', () => {
+            openModal(phoneModal);
+        });
+    }
     
     // Sistema de modais
     function openModal(modal) {
@@ -401,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function init() {
         initTheme();
         checkSavedStatus();
-        updateBusinessHoursStatus();
+        updateBusinessHoursStatus(); // Inicializa o status do horário
         checkScroll(); // Verificar elementos visíveis no carregamento
         
         // Atualiza o status do horário a cada minuto
@@ -418,44 +391,6 @@ document.addEventListener('DOMContentLoaded', function() {
             card.classList.add('hidden');
         });
     }
-
-    // Efeito adicional para o botão do WhatsApp
-const whatsappFloat = document.querySelector('.whatsapp-float');
-if (whatsappFloat) {
-    // Adicionar tooltip no hover (para desktop)
-    whatsappFloat.addEventListener('mouseenter', function() {
-        if (window.innerWidth > 768) {
-            const tooltip = document.createElement('div');
-            tooltip.className = 'whatsapp-tooltip';
-            tooltip.textContent = 'Fale conosco no WhatsApp';
-            tooltip.style.cssText = `
-                position: absolute;
-                right: 70px;
-                background-color: rgba(0, 0, 0, 0.8);
-                color: white;
-                padding: 8px 12px;
-                border-radius: 6px;
-                font-size: 14px;
-                white-space: nowrap;
-                z-index: 1000;
-            `;
-            this.appendChild(tooltip);
-        }
-    });
-    
-    whatsappFloat.addEventListener('mouseleave', function() {
-        const tooltip = this.querySelector('.whatsapp-tooltip');
-        if (tooltip) {
-            tooltip.remove();
-        }
-    });
-    
-    // Remover animação de pulso após 5 segundos para melhor performance
-    setTimeout(() => {
-        whatsappFloat.style.animation = 'float 3s ease-in-out infinite';
-        whatsappFloat.style.setProperty('--pulse-animation', 'none');
-    }, 5000);
-}
     
     // Event listeners para scroll e resize
     window.addEventListener('scroll', checkScroll);
@@ -463,31 +398,4 @@ if (whatsappFloat) {
     
     // Inicializar aplicação
     init();
-    
-    // Instruções para substituir imagens
-    console.log(`
-    ===========================================
-    INSTRUÇÕES PARA PERSONALIZAÇÃO:
-    
-    1. LOGO DO RESTAURANTE:
-       - Substitua o conteúdo do elemento com id="restaurantLogo"
-       - A imagem deve ser quadrada (recomendado: 200x200px)
-       - O elemento já tem borda redonda
-    
-    2. IMAGEM DO RESTAURANTE (hero):
-       - Substitua o conteúdo do elemento com id="restaurantImage"
-       - Tamanho recomendado: 800x600px
-    
-    3. IMAGEM DO AMBIENTE INTERNO:
-       - Substitua o conteúdo do elemento com id="restaurantInterior"
-       - Tamanho recomendado: 800x600px
-    
-    4. LINK DO WHATSAPP:
-       - Já configurado para: +55 11 99269-5730
-    
-    5. HORÁRIO DE FUNCIONAMENTO:
-       - Sistema automático que verifica se está aberto/fechado
-       - Atualiza automaticamente a cada minuto
-    ===========================================
-    `);
 });
